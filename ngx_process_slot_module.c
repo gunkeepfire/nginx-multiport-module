@@ -113,6 +113,11 @@ ngx_process_slot_process_init(ngx_cycle_t *cycle)
     ctx = pscf->ctx;
 
     for (;;) {
+        if (0 == ngx_strncmp(ngx_processes[ngx_process_slot].name,"cache manager process",21) \
+			|| 0 == ngx_strncmp(ngx_processes[ngx_process_slot].name,"cache loader process",20))
+		{
+			break;
+		}
         if (ngx_atomic_cmp_set((ngx_atomic_t *) &ctx->process_slot[ngx_worker],
             (ngx_atomic_uint_t)ctx->process_slot[ngx_worker], ngx_process_slot))
         {
