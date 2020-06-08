@@ -113,9 +113,9 @@ ngx_process_slot_process_init(ngx_cycle_t *cycle)
     ctx = pscf->ctx;
 
     for (;;) {
-        if (-1 == ctx->process_slot[ngx_worker] || (ngx_processes[ngx_process_slot].name && 0 != ngx_strncmp(ngx_processes[ngx_process_slot].name,"worker process",14)))
+        if (-1 != ctx->process_slot[ngx_worker] || (ngx_processes[ngx_process_slot].name && 0 != ngx_strncmp(ngx_processes[ngx_process_slot].name,"worker process",14)))
 	{
-		return;
+	    break;
 	}
         if (ngx_atomic_cmp_set((ngx_atomic_t *) &ctx->process_slot[ngx_worker],
             (ngx_atomic_uint_t)ctx->process_slot[ngx_worker], ngx_process_slot))
@@ -138,7 +138,7 @@ ngx_process_slot_process_exit(ngx_cycle_t *cycle)
     ctx = pscf->ctx;
     if (-1 == ctx->process_slot[ngx_worker] || (ngx_processes[ngx_process_slot].name && 0 != ngx_strncmp(ngx_processes[ngx_process_slot].name,"worker process",14)))
     {
-		return;
+	return;
     }
     ngx_atomic_cmp_set((ngx_atomic_t *) &ctx->process_slot[ngx_worker],
             (ngx_atomic_uint_t)ngx_process_slot, -1);
